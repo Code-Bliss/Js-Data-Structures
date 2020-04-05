@@ -19,8 +19,20 @@ class TreeNode {
         return this.left;
     }
 }
-
+/**
+ *insertData(data) ->used to insert data
+ *removeData(data)->used to remove data from node and this function returns the root node after deletion
+ *inorder()->returns inorder traversal of tree in array 
+ *preorder()->returns preorder traversal of tree in array 
+ *postorder()->returns postorder traversal of tree in arrayss
+ *search(data)->returns the node with the given data if not found retruns null
+ *getRootNode()->returns root node
+ *findMin()->returns min node s
+ * @class BST
+ */
 class BST {
+
+
     constructor() {
         this.root = null;
     }
@@ -190,7 +202,7 @@ class BST {
             return null;
         } else if (root.left) {
             return this.findMinNode(root.left);
-        }  else {
+        } else {
             return root;
         }
     }
