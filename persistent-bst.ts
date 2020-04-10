@@ -1,4 +1,21 @@
 
+/*
+PURPOSE: to bring persistance in data structures
+
+IMPLEMENTATION: using the tree method to keep track of history
+
+EXPLANATION: Consider a persistent set S with the operations INSERT,DELETE,
+                and SEARCH, which we implement using binary search trees.
+                We maintain a separate root for every version of the set
+
+REFERENCES: http://courses.csail.mit.edu/6.854/06/scribe/s2-persistent.pdf
+            https://en.wikipedia.org/wiki/Persistent_data_structure
+            https://walkccc.github.io/CLRS/Chap13/Problems/13-1/
+        
+FUTURE ROAD MAP: to implement this using  'Sleator, Tarjan et al' method which is more efficient in time and space than the present algorithm. 
+
+*/
+
 class BSTTreeNode<T> {
     public left: BSTTreeNode<T>;
     public right: BSTTreeNode<T>;
