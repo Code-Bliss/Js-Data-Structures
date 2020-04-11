@@ -1,5 +1,5 @@
 
-class Stack<T> {
+export default class Stack<T> {
     private storage: Array<T>;
     private previousVersion: Array<T>;
 
