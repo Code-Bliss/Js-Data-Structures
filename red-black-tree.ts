@@ -27,13 +27,18 @@ class RedBlackTreeNode<T> {
     }
 }
 
+const nill: RedBlackTreeNode<null> = new RedBlackTreeNode(null)
+
 class RedBlackTree<T> {
 
-    private nill: RedBlackTreeNode<null> = new RedBlackTreeNode(null);
+    // private nill: RedBlackTreeNode<null> = new RedBlackTreeNode(null);
+    private nill: RedBlackTreeNode<null> = nill;
     private root: RedBlackTreeNode<T>;
+    private blackHeight: number;
 
     constructor() {
         this.root = this.nill;
+        this.blackHeight = 0;
     }
 
     // comment this
@@ -196,6 +201,10 @@ class RedBlackTree<T> {
                     this.rotateTree('left', node.parent.parent);
                 }
             }
+        }
+
+        if (this.root.color === 'red') {
+            this.blackHeight = this.blackHeight + 1;
         }
         this.root.color = 'black'
     }
@@ -404,9 +413,11 @@ class RedBlackTree<T> {
                 }
             }
         }
+
+        if (arbitraryNode === this.root) {
+            this.blackHeight = this.blackHeight - 1
+        }
         arbitraryNode.color = 'black';
-
-
     }
 
 
@@ -494,6 +505,90 @@ class RedBlackTree<T> {
             stack.push(traverser);
             traverser = traverser.left;
         }
+    }
+
+    getSubTreeByBlackHeight(tree: RedBlackTree<T>, blackHeight: number) {
+        let subTreeBlackHeight: number = tree.blackHeight;
+        let subTree: RedBlackTreeNode<T> = tree.root;
+        while (subTreeBlackHeight > blackHeight) {
+            if (subTree.right) {
+                subTree = subTree.right;
+            } else {
+                subTree = subTree.left;
+            }
+            if (subTree.color === 'black') {
+                subTreeBlackHeight = subTreeBlackHeight - 1;
+            }
+        }
+
+        return subTree;
+    }
+
+    private RB_Transplant(tree: RedBlackTree<T>, u: RedBlackTreeNode<T>, v: RedBlackTreeNode<T>) {
+        if (u.parent === tree.nill) {
+            tree.root = v;
+        } else if (u === u.parent.left) {
+            u.parent.left = v;
+        } else {
+            u.parent.right = v;
+        }
+        v.parent = u.parent;
+    }
+
+    private RB_Join(tree: RedBlackTree<T>, firstTreeRoot: RedBlackTreeNode<T>, mergeNode: RedBlackTreeNode<T>, secondTreeRoot: RedBlackTreeNode<T>) {
+        this.RB_Transplant(tree, firstTreeRoot, mergeNode);
+
+        if (firstTreeRoot.value < secondTreeRoot.value) {
+            mergeNode.left = firstTreeRoot;
+            mergeNode.right = secondTreeRoot;
+        } else {
+            mergeNode.right = firstTreeRoot;
+            mergeNode.left = secondTreeRoot;
+        }
+        firstTreeRoot.parent = mergeNode;
+        secondTreeRoot.parent = mergeNode;
+
+    }
+    /**
+     *only gives correct results if new tree is completely has larger value items than present tree
+     * addn info: The join operation takes two dynamic sets S1 and S2 
+     * and an element x such that for any x1 ∈ S1 and x2 ∈ S2, we havekey[x1] ≤ key[x] ≤ key[x2]. 
+     * It returns a set S = S1 ∪{x}∪ S2. In this problem, we investigate how to implement the join operation on red-black trees.
+     *
+     * TODO: should accept any tree to merge into existing
+     *
+     * @param {RedBlackTree<T>} newTree
+     * @memberof RedBlackTree
+     */
+    public mergeTree(newTree: RedBlackTree<T>) {
+        let smallTree: RedBlackTree<T>;
+        let bigTree: RedBlackTree<T>;
+
+        if (this.blackHeight < newTree.blackHeight) {
+            smallTree = this;
+            bigTree = newTree;
+        } else {
+            smallTree = newTree;
+            bigTree = this;
+        }
+
+        smallTree.nill = this.nill;
+        bigTree.nill = this.nill;
+
+        const mergeNode = new RedBlackTreeNode<T>(smallTree.nill);
+        mergeNode.color = 'red';
+        mergeNode.value = smallTree.root.value;
+
+        this.RB_Join(bigTree, this.getSubTreeByBlackHeight(bigTree, smallTree.blackHeight), mergeNode, smallTree.root);
+
+        this.root = bigTree.root;
+        this.nill = bigTree.nill;
+        this.blackHeight = bigTree.blackHeight;
+
+        this.insertion_fixup(mergeNode);
+
+        this.deleteNode(mergeNode);
+
     }
 
 }
