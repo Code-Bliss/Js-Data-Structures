@@ -523,7 +523,16 @@ class RedBlackTree<T> {
 
         return subTree;
     }
-
+    
+    /**
+     *replaces u with v in the given tree
+     *
+     * @private
+     * @param {RedBlackTree<T>} tree
+     * @param {RedBlackTreeNode<T>} u
+     * @param {RedBlackTreeNode<T>} v
+     * @memberof RedBlackTree
+     */
     private RB_Transplant(tree: RedBlackTree<T>, u: RedBlackTreeNode<T>, v: RedBlackTreeNode<T>) {
         if (u.parent === tree.nill) {
             tree.root = v;
@@ -535,6 +544,16 @@ class RedBlackTree<T> {
         v.parent = u.parent;
     }
 
+    /**
+     *joins second tree into first tree with the merge node
+     *
+     * @private
+     * @param {RedBlackTree<T>} tree
+     * @param {RedBlackTreeNode<T>} firstTreeRoot
+     * @param {RedBlackTreeNode<T>} mergeNode
+     * @param {RedBlackTreeNode<T>} secondTreeRoot
+     * @memberof RedBlackTree
+     */
     private RB_Join(tree: RedBlackTree<T>, firstTreeRoot: RedBlackTreeNode<T>, mergeNode: RedBlackTreeNode<T>, secondTreeRoot: RedBlackTreeNode<T>) {
         this.RB_Transplant(tree, firstTreeRoot, mergeNode);
 
