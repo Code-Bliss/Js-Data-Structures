@@ -200,9 +200,8 @@ export default class Treap<T>{
 
     private deleteNode(node: TreapNode<T>) {
         node.priority = Number.POSITIVE_INFINITY;
-        while ((node.left && node.left.priority < node.priority) ||
-            (node.right && node.right.priority < node.priority)) {
-            if (node.left && node.left.priority < node.priority) {
+        while (node.left || node.right) {
+            if (!node.right || (node.left && node.left.priority < node.right.priority)) {
                 this.rotateTree('right', node);
             } else {
                 this.rotateTree('left', node);
